@@ -96,7 +96,6 @@ basic_sources = files(
         'sha256.c',
         'sigbus.c',
         'signal-util.c',
-        'siphash24.c',
         'socket-util.c',
         'sort-util.c',
         'stat-util.c',
@@ -124,6 +123,8 @@ basic_sources = files(
 )
 
 sources += basic_sources
+
+basic_sources += rust_objects.process('siphash24.rs')
 
 generated_gperf_headers = []
 foreach item : [

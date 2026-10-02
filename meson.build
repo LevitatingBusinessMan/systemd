@@ -345,6 +345,16 @@ conf.set10('ENABLE_FIRST_BOOT_FULL_PRESET',                   get_option('first-
 #####################################################################
 
 cc = meson.get_compiler('c')
+
+# Rust sources are no_std and compiled by rustc directly into bare objects without libcore, which are linked
+# like C objects. The minimum version is the rustc in Ubuntu 24.04.
+rustc = find_program('rustc', version : '>=1.75')
+rust_objects = generator(
+        rustc,
+        output : '@BASENAME@.o',
+        arguments : ['--edition=2021', '--crate-type=lib', '--emit=obj', '-C', 'panic=abort',
+                     '-C', 'opt-level=2', '-C', 'codegen-units=1', '-o', '@OUTPUT@', '@INPUT@'])
+
 userspace_c_args = []
 userspace_c_ld_args = []
 userspace_sources = []
